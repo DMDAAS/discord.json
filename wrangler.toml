@@ -1,0 +1,11 @@
+name = "discord-interactions-worker-ts"
+type = "javascript"
+account_id = ""
+zone_id = ""
+route = ""
+workers_dev = true
+
+[build]
+command = "npm install && npm run build"
+[build.upload]
+format = "service-worker"
