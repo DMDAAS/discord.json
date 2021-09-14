@@ -31,7 +31,10 @@ export async function handleRequest(request: Request): Promise<Response> {
   let response = await fetch(new Request(`${url}/command_${interaction.data.name}.json`))
   let responseBody = await response.text()
 
-  return respond(responseBody)
+  return new Response(
+    responseBody, {
+      headers: {'Content-Type': 'application/json'},
+    })
 }
 
 // Utility stuff //
