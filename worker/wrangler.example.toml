@@ -1,4 +1,4 @@
-name = "discord-interactions-worker-ts"
+name = "discord.json"
 type = "javascript"
 account_id = ""
 zone_id = ""

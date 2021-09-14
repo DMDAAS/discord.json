@@ -1,9 +1,9 @@
 {
-  "name": "discord-interactions-worker-ts",
+  "name": "discord.json",
   "version": "1.0.0",
   "description": "Discord Interactions bot template using Cloudflare workers",
   "main": "dist/worker.js",
-  "author": "author",
+  "author": "nwunderly",
   "license": "MIT",
   "scripts": {
     "build": "webpack",
