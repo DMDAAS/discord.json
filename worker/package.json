@@ -1,5 +1,5 @@
 {
-  "name": "discord.json",
+  "name": "discord-json",
   "version": "1.0.0",
   "description": "Discord Interactions bot template using Cloudflare workers",
   "main": "dist/worker.js",
