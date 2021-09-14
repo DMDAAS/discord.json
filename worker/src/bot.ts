@@ -5,17 +5,31 @@ import { APIPingInteraction } from 'discord-api-types/payloads/v9/_interactions/
 // The actual bot //
 
 export async function handleRequest(request: Request): Promise<Response> {
+  const { searchParams } = new URL(request.url)
+  let publicKey = searchParams.get('public_key')
+  if (publicKey === null) {
+    publicKey = ''
+  }
+
   if (!request.headers.get('X-Signature-Ed25519') || !request.headers.get('X-Signature-Timestamp')) return Response.redirect('https://nwunder.com')
-  if (!await verify(request)) return new Response('', { status: 401 })
+  if (!await verify(publicKey, request)) return new Response('', { status: 401 })
 
   const interaction = await request.json() as APIPingInteraction | APIApplicationCommandInteraction
 
-  if (interaction.type === InteractionType.Ping)
+  if (interaction.type === InteractionType.Ping) {
     return respondComplex({
       type: InteractionResponseType.Pong
     })
+  }
 
-  return respond('Hello from Cloudflare workers!')
+  let url = searchParams.get('url')
+  if (url === null) {
+    return new Response('', { status: 404 })
+  }
+  let response = await fetch(new Request(url))
+  let responseBody = await response.text()
+
+  return respond(responseBody)
 }
 
 // Utility stuff //
