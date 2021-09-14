@@ -28,7 +28,7 @@ export async function handleRequest(request: Request): Promise<Response> {
   if (url === null) {
     return new Response('', { status: 404 })
   }
-  let response = await fetch(new Request(`${url}/${interaction.data.name}.json`))
+  let response = await fetch(new Request(`${url}/command_${interaction.data.name}.json`))
   let responseBody = await response.text()
 
   return respond(responseBody)
