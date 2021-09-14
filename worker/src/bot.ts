@@ -1,15 +1,17 @@
 import { verify } from './verify'
-import { InteractionType, InteractionResponseType, APIInteractionResponse, RESTPostAPIChannelInviteJSONBody, APIInvite, ApplicationCommandOptionType, ChannelType, MessageFlags, APIApplicationCommandInteraction, InviteTargetType, RouteBases, Routes } from 'discord-api-types/v9'
+import { 
+  InteractionType, 
+  InteractionResponseType, 
+  APIInteractionResponse, 
+  APIApplicationCommandInteraction 
+} from 'discord-api-types/v9'
 import { APIPingInteraction } from 'discord-api-types/payloads/v9/_interactions/ping'
 
 // The actual bot //
 
 export async function handleRequest(request: Request): Promise<Response> {
   const { searchParams } = new URL(request.url)
-  let publicKey = searchParams.get('public_key')
-  if (publicKey === null) {
-    publicKey = ''
-  }
+  let publicKey = searchParams.get('public_key') || ""
 
   if (!request.headers.get('X-Signature-Ed25519') || !request.headers.get('X-Signature-Timestamp')) return Response.redirect('https://nwunder.com')
   if (!await verify(publicKey, request)) return new Response('', { status: 401 })
