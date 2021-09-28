@@ -1,9 +1,10 @@
 import { verify } from './verify'
-import { 
-  InteractionType, 
-  InteractionResponseType, 
-  APIInteractionResponse, 
-  APIApplicationCommandInteraction 
+import { /* INSERT STUFF HERE */ } from './parser'
+import {
+  InteractionType,
+  InteractionResponseType,
+  APIInteractionResponse,
+  APIApplicationCommandInteraction as Interaction,
 } from 'discord-api-types/v9'
 import { APIPingInteraction } from 'discord-api-types/payloads/v9/_interactions/ping'
 
@@ -13,10 +14,12 @@ export async function handleRequest(request: Request): Promise<Response> {
   const { searchParams } = new URL(request.url)
   let publicKey = searchParams.get('public_key') || ""
 
-  if (!request.headers.get('X-Signature-Ed25519') || !request.headers.get('X-Signature-Timestamp')) return Response.redirect('https://nwunder.com')
-  if (!await verify(publicKey, request)) return new Response('', { status: 401 })
+  if (!request.headers.get('X-Signature-Ed25519') || !request.headers.get('X-Signature-Timestamp'))
+    return Response.redirect('https://github.com/DMDaaS/discord.json')
+  if (!await verify(publicKey, request))
+    return new Response('', { status: 401 })
 
-  const interaction = await request.json() as APIPingInteraction | APIApplicationCommandInteraction
+  const interaction = await request.json() as APIPingInteraction | Interaction
 
   if (interaction.type === InteractionType.Ping) {
     return respondComplex({
@@ -28,13 +31,19 @@ export async function handleRequest(request: Request): Promise<Response> {
   if (url === null) {
     return new Response('', { status: 404 })
   }
-  let response = await fetch(new Request(`${url}/command_${interaction.data.name}.json`))
-  let responseBody = await response.text()
+  let response = await fetch(new Request(url))
+  let config = await response.json()
+  return processCommands(interaction, config)
 
-  return new Response(
-    responseBody, {
-      headers: {'Content-Type': 'application/json'},
-    })
+  // let response = await fetch(new Request(`${url}/command_${interaction.data.name}.json`))
+  // return new Response(
+  //   responseBody, {
+  //     headers: {'Content-Type': 'application/json'},
+  //   })
+}
+
+async function processCommands(interaction: Interaction, config: object): Promise<Response> {
+
 }
 
 // Utility stuff //
